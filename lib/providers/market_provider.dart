@@ -1,6 +1,7 @@
 // ignore_for_file: no_leading_underscores_for_local_identifiers
 
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:crypto_tracker/models/crypto_currency.dart';
 import 'package:crypto_tracker/services/api.dart';
@@ -22,8 +23,9 @@ class MarketProvider with ChangeNotifier {
     markets = temp;
     isLoading = false;
     notifyListeners();
-    Timer(const Duration(seconds: 1), () {
+    Timer(const Duration(seconds: 3), () {
       fetchData();
+      log("Data upated");
     });
   }
 }
