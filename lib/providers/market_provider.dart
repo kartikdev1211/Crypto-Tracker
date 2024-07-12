@@ -23,7 +23,7 @@ class MarketProvider with ChangeNotifier {
     markets = temp;
     isLoading = false;
     notifyListeners();
-    Timer(const Duration(seconds: 3), () {
+    Timer(const Duration(seconds: 4), () {
       fetchData();
       log("Data upated");
     });
