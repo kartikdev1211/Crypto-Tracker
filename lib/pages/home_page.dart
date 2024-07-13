@@ -1,5 +1,5 @@
-import 'package:crypto_tracker/models/crypto_currency.dart';
-import 'package:crypto_tracker/providers/market_provider.dart';
+import 'package:crypto_tracker/pages/favourites.dart';
+import 'package:crypto_tracker/pages/markets.dart';
 import 'package:crypto_tracker/providers/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -11,7 +11,17 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
+  late TabController viewController;
+  @override
+  void initState() {
+    viewController = TabController(
+      length: 2,
+      vsync: this,
+    );
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     ThemeProvider themeProvider =
@@ -49,76 +59,23 @@ class _HomePageState extends State<HomePage> {
               SizedBox(
                 height: MediaQuery.of(context).size.height / 40,
               ),
+              TabBar(
+                controller: viewController,
+                tabs: const [
+                  Tab(
+                    child: Text("Markets"),
+                  ),
+                  Tab(
+                    child: Text("Favourites"),
+                  ),
+                ],
+              ),
               Expanded(
-                child: Consumer<MarketProvider>(
-                  builder: (context, provider, child) {
-                    if (provider.isLoading == true) {
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    } else {
-                      if (provider.markets.isNotEmpty) {
-                        return ListView.builder(
-                          physics: const BouncingScrollPhysics(),
-                          itemCount: provider.markets.length,
-                          itemBuilder: (context, index) {
-                            CryptoCurrency currency = provider.markets[index];
-                            return ListTile(
-                              contentPadding: const EdgeInsets.all(0),
-                              leading: CircleAvatar(
-                                backgroundColor: Colors.white,
-                                backgroundImage: NetworkImage(currency.image!),
-                              ),
-                              title: Text(
-                                  "${currency.name!} #${currency.marketCapRank}"),
-                              subtitle: Text(currency.symbol!.toUpperCase()),
-                              trailing: currency.currentPrice != null
-                                  ? Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.end,
-                                      children: [
-                                        Text(
-                                          "₹${currency.currentPrice!.toStringAsFixed(4)}",
-                                          style: const TextStyle(
-                                              color: Colors.blue,
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 18),
-                                        ),
-                                        Builder(
-                                          builder: (context) {
-                                            double priceChange =
-                                                currency.priceChange24!;
-                                            double priceChangePrecentage =
-                                                currency
-                                                    .priceChangePercentage24!;
-                                            if (priceChange < 0) {
-                                              return Text(
-                                                "${priceChangePrecentage.toStringAsFixed(2)}% (${priceChange.toStringAsFixed(4)})",
-                                                style: const TextStyle(
-                                                    color: Colors.red),
-                                              );
-                                            } else {
-                                              return Text(
-                                                "+${priceChangePrecentage.toStringAsFixed(2)}% (+${priceChange.toStringAsFixed(4)})",
-                                                style: const TextStyle(
-                                                    color: Colors.green),
-                                              );
-                                            }
-                                          },
-                                        ),
-                                      ],
-                                    )
-                                  : null,
-                            );
-                          },
-                        );
-                      } else {
-                        return const Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      }
-                    }
-                  },
+                child: TabBarView(
+                  controller: viewController,
+                  physics: const BouncingScrollPhysics(
+                      parent: AlwaysScrollableScrollPhysics()),
+                  children: const [Markets(), Favourites()],
                 ),
               ),
             ],

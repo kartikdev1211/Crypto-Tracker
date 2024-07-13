@@ -1,5 +1,5 @@
 import 'package:crypto_tracker/constants/themes.dart';
-import 'package:crypto_tracker/models/local_storage.dart';
+import 'package:crypto_tracker/services/local_storage.dart';
 import 'package:crypto_tracker/pages/home_page.dart';
 import 'package:crypto_tracker/providers/market_provider.dart';
 import 'package:crypto_tracker/providers/theme_provider.dart';

@@ -1,4 +1,4 @@
-import 'package:crypto_tracker/models/local_storage.dart';
+import 'package:crypto_tracker/services/local_storage.dart';
 import 'package:flutter/material.dart';
 
 class ThemeProvider with ChangeNotifier {
